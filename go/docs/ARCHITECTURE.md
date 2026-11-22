@@ -144,7 +144,8 @@ The rules apply to production code only. Tests may wire real adapters together.
 
 ## Migration roadmap
 
-Each step adds adapters (and, where needed, a port). Steps 1–4 leave the core
+The dated 4-week plan with task checklists is in [ROADMAP.md](ROADMAP.md).
+In outline, each step adds adapters (and, where needed, a port). Steps 1–4 leave the core
 unchanged.
 
 1. **More integrations:** port each `integrations/<vendor>` as
