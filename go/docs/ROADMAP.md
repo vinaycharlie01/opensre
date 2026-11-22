@@ -8,6 +8,14 @@ Claude adapter, 5 Datadog/Grafana tools, the HTTP API, the worker, and the CLI.
 Tick boxes in PRs as work lands. Each week ends with a demo and a go/no-go
 check against its exit criteria.
 
+**Detailed subtasks:** [MIGRATION_TASKS.md](MIGRATION_TASKS.md) breaks every
+item below into ID'd tasks (all 268 Python tools by name, every CLI command,
+every store), with source paths, estimates, dependencies and acceptance checks.
+
+**Staffing:** the full scope is ~569 focused hours, which needs **five people**
+(one per workstream in MIGRATION_TASKS.md §2) to finish in 4 weeks. With fewer
+people, extend the window or apply the cut list (§6) at the Day 10 checkpoint.
+
 ---
 
 ## 1. What "finished" means
@@ -96,7 +104,7 @@ Goal: everything later work depends on, so Weeks 2–3 are adapter-only.
 **Day 2 (Tue): Persistence**
 - [ ] `ports.InvestigationRepository` → `secondary/repository/postgres` (pgx) + `sqlite` (local)
 - [ ] Migration tool (goose or atlas); first migrations: investigations, evidence
-- [ ] Read `PERSISTENCE.md` and map existing Python tables; decide on reusing or migrating data
+- [ ] Inventory the existing Python stores (scheduler `task_runs`, gateway tables, telemetry, CI-fix tables, JSONL sessions) and decide per store: reuse, migrate, or start fresh (`PERSISTENCE.md` is linked from `AGENTS.md` but missing from the repo)
 - [ ] Repository contract tests run against both backends
 
 **Day 3 (Wed): LLM providers**
@@ -118,6 +126,7 @@ Goal: everything later work depends on, so Weeks 2–3 are adapter-only.
 - [ ] Incident window and anchor types (`core/domain/types`)
 - [ ] Credential store port + adapters (env, file, hosted `credentials_api`)
 - [ ] `SkillSource` port that loads the existing `SKILL.md` files and system prompt read-only
+- [ ] MCP client adapter (GitHub talks to GitHub through MCP; also unlocks `sentry_mcp`, `posthog_mcp`, `mcp_servers`)
 - [ ] **Week 1 exit:** Postgres-backed `serve` runs one investigation on Claude and one on OpenAI, with traces visible
 
 ### Week 2 (30 Nov – 4 Dec): Tier 1 integrations
@@ -236,7 +245,7 @@ run, or the rollback runbook.
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| Throughput: ~90 integrations in ~10 days | Slip in Weeks 2–3 | Template generator (Day 1); port by tool count, not folder; cut list §6 |
+| Throughput: ~90 integrations in ~10 days | Slip in Weeks 2–3 (one person cannot do it; plan assumes five) | Template generator (Day 1); port by tool count, not folder; cut list §6 |
 | Behaviour drift from Python | Worse investigations | Shadow mode on real alerts (Day 19); keep tool names and schemas identical |
 | Mutating tools ported before approvals exist | Unsafe actions in production | `ApprovalGate` lands Day 4; arch/registry check refuses non-read-only tools without it |
 | Data migration from Python storage | Lost history | Decide reuse vs migrate on Day 2; dry run before cutover |
